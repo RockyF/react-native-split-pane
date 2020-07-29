@@ -1,0 +1,21 @@
+{
+  "name": "react-native-split-pane",
+  "version": "1.0.0",
+  "description": "Split pane",
+  "main": "split-pane.js",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-native": "^0.63.1"
+  },
+  "keywords": [
+    "react-native",
+    "split",
+    "pane"
+  ],
+  "repository": "https://github.com/RockyF/react-native-split-pane",
+  "homepage": "https://github.com/RockyF/react-native-split-pane#readme",
+  "bugs": {
+    "url": "https://github.com/RockyF/react-native-split-pane/issues"
+  }
+}

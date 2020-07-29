@@ -2,7 +2,11 @@
 Split pane
 
 # Install
+`npm i react-native-split-pane`
+or
 `yarn add react-native-split-pane`
+
+It depends on `react-native-app-interface`, so should execute `pod install` after install script
 
 # Usage
 ```jsx harmony

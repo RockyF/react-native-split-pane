@@ -7,17 +7,18 @@ import {
 	StyleSheet,
 	View,
 } from 'react-native';
+import {setCursor} from "react-native-app-interface";
 
-const Pane = ({flexible = false, children, onLayout, size}) => {
+const Pane = ({flexible = false, children, onLayout, style}) => {
 	return (
-		<View style={[flexible ? {flex: 1} : {...size},]} onLayout={onLayout}>
+		<View style={[styles.pane, flexible ? {flex: 1} : style,]} onLayout={onLayout}>
 			{children}
 		</View>
 	)
 };
 
 let startPos = {x: 0, y: 0,};
-const Separator = ({startDrag, onDragging, endDrag, style}) => {
+const Separator = ({startDrag, onDragging, endDrag, style, honrizontal}) => {
 	function onStartShouldSetResponder(evt) {
 		return true;
 	}
@@ -42,8 +43,18 @@ const Separator = ({startDrag, onDragging, endDrag, style}) => {
 		endDrag();
 	}
 
+	function onMouseEnter(evt){
+		setCursor(honrizontal ? 'resizeLeftRight' : 'resizeUpDown');
+	}
+
+	function onMouseLeave(evt){
+		setCursor('arrow');
+	}
+
 	return (
 		<View style={[styles.separator, style]}
+		      onMouseEnter={onMouseEnter}
+		      onMouseLeave={onMouseLeave}
 		      onStartShouldSetResponder={onStartShouldSetResponder}
 		      onResponderGrant={onResponderGrant}
 		      onResponderMove={onResponderMove}
@@ -71,11 +82,12 @@ export default ({
 	const posKey = split === 'h' ? 'x' : 'y';
 	const sizeKey = split === 'h' ? 'width' : 'height';
 
-	const [primaryStyle, setPrimaryStyle] = useState({[sizeKey]: value || defaultValue});
+	const [primarySize, setPrimarySize] = useState(value || defaultValue);
 
 	const [dragging, setDragging] = useState(false);
 
-	if (split === 'h') {
+	const isHorizontal = split === 'h';
+	if (isHorizontal) {
 		wrapperStyle.push({flexDirection: 'row'})
 	}
 
@@ -91,17 +103,14 @@ export default ({
 
 		const {width, height} = evt.nativeEvent.layout;
 		if (!isPrimary) {
-			setPrimaryStyle({
-				width,
-				height,
-			})
+			setPrimarySize(evt.nativeEvent.layout[sizeKey])
 		}
 	}
 
 	function startDrag() {
 		setDragging(true);
 		startSize = {
-			[sizeKey]: primaryStyle[sizeKey],
+			[sizeKey]: primarySize,
 		}
 	}
 
@@ -111,9 +120,7 @@ export default ({
 		if (max !== undefined) {
 			value = Math.min(value, max);
 		}
-		setPrimaryStyle({
-			[sizeKey]: value,
-		});
+		setPrimarySize(value);
 
 		onChange && onChange(value);
 	}
@@ -123,15 +130,19 @@ export default ({
 	}
 
 	useEffect(()=>{
-		setPrimaryStyle({[sizeKey]: value || defaultValue})
+		setPrimarySize(value || defaultValue)
 	}, [value]);
+
+	const paneStyle = {
+		[sizeKey]: primarySize,
+	};
 
 	return (
 		<View style={wrapperStyle}>
-			<Pane size={primaryStyle} flexible={primary !== 'first'}
+			<Pane style={paneStyle} flexible={primary !== 'first'}
 			      onLayout={evt => onLayout(evt, primary !== 'first')}>{children[0]}</Pane>
-			<Separator style={separatorStyles} onDragging={onDragging} startDrag={startDrag} endDrag={endDrag}/>
-			<Pane size={primaryStyle} flexible={primary !== 'second'}
+			<Separator style={separatorStyles} honrizontal={isHorizontal} onDragging={onDragging} startDrag={startDrag} endDrag={endDrag}/>
+			<Pane style={paneStyle} flexible={primary !== 'second'}
 			      onLayout={evt => onLayout(evt, primary !== 'second')}>{children[1]}</Pane>
 		</View>
 	);
@@ -141,5 +152,8 @@ const styles = StyleSheet.create({
 	wrapper: {},
 	separator: {
 		backgroundColor: 'gray',
+	},
+	pane: {
+
 	},
 });

@@ -18,6 +18,7 @@ const Pane = ({flexible = false, children, onLayout, style}) => {
 };
 
 let startPos = {x: 0, y: 0,};
+let dragging = false;
 const Separator = ({startDrag, onDragging, endDrag, style, honrizontal}) => {
 	function onStartShouldSetResponder(evt) {
 		return true;
@@ -27,6 +28,7 @@ const Separator = ({startDrag, onDragging, endDrag, style, honrizontal}) => {
 		const {pageX, pageY} = evt.nativeEvent;
 		startPos.x = pageX;
 		startPos.y = pageY;
+		dragging = true;
 		startDrag(startPos);
 	}
 
@@ -40,7 +42,9 @@ const Separator = ({startDrag, onDragging, endDrag, style, honrizontal}) => {
 	}
 
 	function onResponderRelease(evt) {
+		setCursor('arrow');
 		endDrag();
+		dragging = false;
 	}
 
 	function onMouseEnter(evt){
@@ -48,6 +52,9 @@ const Separator = ({startDrag, onDragging, endDrag, style, honrizontal}) => {
 	}
 
 	function onMouseLeave(evt){
+		if(dragging){
+			return;
+		}
 		setCursor('arrow');
 	}
 

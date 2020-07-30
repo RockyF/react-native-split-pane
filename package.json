@@ -1,6 +1,6 @@
 {
   "name": "react-native-split-pane",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Split pane",
   "main": "split-pane.js",
   "license": "MIT",

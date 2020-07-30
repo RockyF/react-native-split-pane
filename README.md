@@ -8,6 +8,9 @@ or
 
 It depends on `react-native-app-interface`, so should execute `pod install` after install script
 
+# Shortcuts
+![open](https://raw.githubusercontent.com/RockyF/react-native-split-pane/master/assets/shortcut0.gif)
+
 # Usage
 ```jsx harmony
 import SplitPane from 'react-native-split-pane';
